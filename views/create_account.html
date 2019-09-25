@@ -1,0 +1,107 @@
+<%
+   from bottle import get, post, request, response, redirect
+   from passlib.hash import pbkdf2_sha256
+   #error messages
+   message = ""
+   status = ""
+   
+   #db connect
+    import pymongo
+    connection = pymongo.MongoClient("mongodb://almedin:Test123@cluster0-shard-00-00-vspbc.mongodb.net:27017,cluster0-shard-00-01-vspbc.mongodb.net:27017,cluster0-shard-00-02-vspbc.mongodb.net:27017/test?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin&retryWrites=true")
+    db = connection.dealership #db
+    coll = db.customers #collection
+   
+   #check if signed in
+   customer = request.get_cookie("customer")
+   if customer is not None:
+        redirect("/home")
+   end
+    
+   #check info
+   createAccount = request.forms.get("createAccount")
+   username = request.forms.get("username")
+   password = request.forms.get("password")
+   repassword = request.forms.get("repassword")
+   nameFree = False
+   passwordConfirm = False
+   if createAccount is not None:
+        if username is not None and password is not None and repassword is not None:
+            #check is username and passwords meet certain lengths
+            if len(username) < 3:
+                message = "Username must have 3 or more characters"
+                status = "alert"
+            elif len(password) < 7 or len(repassword) < 7:
+                message = "Password must have 7 or more characters"
+                status = "alert"
+            elif username == password:
+                message = "Your password cannot be the same as your username"
+                status = "alert"
+            else:
+                #check if username is taken
+                results = coll.find({"_id": username})
+                if results.count() > 0:
+                    message = "The username " + username + " is taken. Enter a different username"
+                    status = "alert"
+                else:
+                    #username is not taken
+                    nameFree = True
+                end
+                
+                #check if password equals repassword
+                if password == repassword:
+                    passwordConfirm = True
+                else:
+                    message = "Your password does not match the re-entered password."
+                    status = "alert"
+                end
+                #if all is correct
+                if nameFree and passwordConfirm:
+                    hash = pbkdf2_sha256.hash(password)
+                    try:
+                        new_customer = {"_id": username,
+                                        "password": hash
+                                        }
+                        coll.insert_one(new_customer)
+                    except Exception as e:
+                        message = "Insert failed"
+                        status = "alert"
+                        redirect("/create_account")
+                    end
+                    response.set_cookie("customer", username)
+                    redirect("/userpage")
+                end
+            end
+        else:
+            message = "You need to enter a username and password"
+            status = "alert"
+        end
+   end
+%>
+    
+
+    
+<!doctype html>
+<html lang="en">
+ <head>
+        <title>Auto</title>
+        <meta charset="utf-8">
+        <link rel='stylesheet' href='/static/css/al.css'>
+    </head>
+    <body>   
+        <h1>Auto Land</h1>
+        <h2>Customer Login</h2>
+         <a href="login" role="button">Go Back</a>
+        <div class="{{status}}">{{message}}</div>
+        <form method="post" class="card">
+            <label>Username:</label>
+            <input type="text" name="username" required>
+            <div>Username must have 3 or more characters</div>
+            <label>Password:</label>
+            <input type="password" name="password" required>
+            <label>Re-enter Password:</label>
+            <input type="password" name="repassword" required>
+            <div>Password must have 7 or more characters</div>
+            <input type="submit" name="createAccount">
+        </form>
+    </body>
+</html>

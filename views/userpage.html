@@ -1,0 +1,130 @@
+<%
+   from bottle import get, post, request, response, redirect
+   from passlib.hash import pbkdf2_sha256
+   #error messages
+   message = ""
+   status = ""
+   
+   #db connect
+    import pymongo
+    connection = pymongo.MongoClient("mongodb://almedin:Test123@cluster0-shard-00-00-vspbc.mongodb.net:27017,cluster0-shard-00-01-vspbc.mongodb.net:27017,cluster0-shard-00-02-vspbc.mongodb.net:27017/test?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin&retryWrites=true")
+    db = connection.dealership #db
+    coll = db.customers #collection
+   
+   #check if signed in
+   customer = request.get_cookie("customer")
+   user = ""
+   if customer is not None:
+        user = customer
+   else:
+        redirect("/home")
+   end
+   
+   #check if updated
+   update = request.forms.get("update")
+   first = request.forms.get("first")
+   last = request.forms.get("last")
+   email = request.forms.get("email")
+   phone1 = request.forms.get("phone1")
+   phone2 = request.forms.get("phone2")
+   street = request.forms.get("street")
+   city = request.forms.get("city")
+   state = request.forms.get("state")
+   zip = request.forms.get("zip")
+   if update is not None:
+        try:
+            myquery = { "_id": user }
+            newvalues = { "$set": { "firstName": first,
+                        "lastName": last,
+                        "email": email,
+                        "phoneNumber": [phone1, phone2],
+                        "address": [{"street": street,
+                                    "city": city,
+                                    "state": state,
+                                    "zip": zip}]
+                        } }
+            coll.update_one(myquery, newvalues)
+            message = "Update successful!"
+            status = "success"
+        except Exception as e:
+            message = "Failed to update data. "
+            status = "alert"
+        end
+   end
+   
+   #get current data
+   try:
+       results = coll.find({"_id": user})
+       for entry in results:
+            first = entry["firstName"]
+            last = entry["lastName"]
+            email = entry["email"]
+            phone1 = entry["phoneNumber"][0]
+            try:
+                phone2 = entry["phoneNumber"][1]
+            except Exception as e:
+                phone2 = ""
+            end
+            street = entry["address"][0]["street"]
+            city = entry["address"][0]["city"]
+            state = entry["address"][0]["state"]
+            zip = entry["address"][0]["zip"]
+       end
+   except Exception as e:
+            first = ""
+            last = ""
+            email = ""
+            phone1 = ""
+            phone2 = ""
+            street = ""
+            city = ""
+            state = ""
+            zip = ""
+   end
+%>
+    
+<!doctype html>
+<html lang="en">
+ <head>
+        <title>Auto</title>
+        <meta charset="utf-8">
+        <link rel='stylesheet' href='/static/css/al.css'>
+    </head>
+    <body>
+         <nav id="top">
+            <a href="home">Home</a>
+            <a href="userpage">My Account</a>
+            <a href="logout">Logout</a>
+        </nav>
+        <h1>Auto Land</h1>
+        <h2>Update Your Account Info</h2>
+         <a href="login" role="button">Go Back</a>
+        <div class="{{status}}">{{message}}</div>
+        <form method="post">
+            <div class="card">
+                <label>First Name:</label>
+                <input value="{{first}}" type="text" name="first" required>
+                <label>Last Name:</label>
+                <input value="{{last}}" type="text" name="last" required>
+                <label>Email:</label>
+                <input value="{{email}}" type="email" name="email" required>
+                <label>Primary Phone Number (123-456-7890):</label>
+                <input value="{{phone1}}" type="tel" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" name="phone1">
+                <label>Secondary Phone Number (123-456-7890):</label>
+                <input value="{{phone2}}" type="tel" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" name="phone2">
+            </div>
+            <div class="card">
+                <div>Address:</div>
+                <label>Street:</label>
+                <input value="{{street}}" type="text" name="street">
+                <label>City:</label>
+                <input value="{{city}}" type="text" name="city">
+                <label>State/Province:</label>
+                <input value="{{state}}" type="text" name="state">
+                <label>Postal Code:</label>
+                <input value="{{zip}}" type="text" name="zip">
+            </div>
+            <input type="submit" name="update">
+        </form>
+    </body>
+</html>

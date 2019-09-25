@@ -1,0 +1,82 @@
+<%  from bottle import get, post, request, response, redirect
+    from passlib.hash import pbkdf2_sha256
+    import pymongo
+    from bson.objectid import ObjectId 
+    #error messages
+    message = ""
+    connection = pymongo.MongoClient("mongodb://almedin:Test123@cluster0-shard-00-00-vspbc.mongodb.net:27017,cluster0-shard-00-01-vspbc.mongodb.net:27017,cluster0-shard-00-02-vspbc.mongodb.net:27017/test?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin&retryWrites=true")
+    db = connection.dealership #db
+    coll = db.inventory
+   
+     #check if signed in
+   admin = request.get_cookie("admin")
+   user = ""
+   if admin is not None:
+        user = admin
+   else:
+        redirect("/adminlogin")
+   end
+    
+    save = request.forms.get("save")
+    cancel = request.forms.get("cancel")
+    if save is not None:
+        ID = request.forms.get('txtID')
+        Make = request.forms.get('make')
+        Model = request.forms.get('model')
+        Year = request.forms.get('year')
+        Price = request.forms.get('price')
+        Mileage = request.forms.get('mileage')
+        Color = request.forms.get('color')
+        MPG = request.forms.get('mpg')
+   
+        myquery = { '_id': ObjectId(ID)}
+        newvalues = { '$set': { 'make': Make, 'model': Model, 'year': Year, 'price': Price, 'mileage': Mileage, 'color': Color, 'mpg': MPG}}
+        coll.update_one(myquery,newvalues)
+        redirect("/inventory")
+    end
+    if cancel is not None:
+        redirect("/inventory")
+    end
+%>
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Auto Land</title>
+        <meta charset="utf-8">
+        <link rel='stylesheet' href='/static/css/al.css'>
+    </head>
+    <body>
+        <header>
+            <nav id="top">
+               <a href="adminhome">Home</a>
+                <a href="inventory">View Inventory</a>
+                <a href="addvehicle">Add A Car</a>
+                <a href="customers">View All Customers</a>
+                <a href="appointments">View Appointments</a>
+                <a href="adminlogout">Logout</a>
+            </nav>
+        </header>
+        <h1>Auto Land</h1>
+        <h2>Update Vehicle</h2>
+        <form name="frmCreate" action="/vehicle/update" method="post" id="frmCreate" class="card">
+            <label>ID:</label>
+            <input name="txtID" type="text" id ="txtID" value="{{vehicle['_id']}}" required>
+            <label>Make:</label>
+            <input type="text" name="make" id ="txtMake" value="{{vehicle['make']}}"required>
+            <label>Model:</label>
+            <input type="text" name="model" id = "txtModel" value="{{vehicle['model']}}" required>
+            <label>Year:</label>
+            <input type="int" name="year" id="txtYear" value="{{vehicle['year']}}" required>
+            <label>Price:</label>
+            <input type="int" name="price" id="txtPrice" value="{{vehicle['price']}}" required>
+            <label>Mileage:</label>
+            <input type="int" name="mileage" id="txtMileage" value="{{vehicle['mileage']}}" required>
+            <label>Color:</label>
+            <input type="text" name="color" id="txtColor" value="{{vehicle['color']}}" required>
+            <label>MPG:</label>
+            <input type="int" name="mpg" id="txtMPG" value="{{vehicle['mpg']}}" required>
+            <input type="submit" name="cancel" value="Cancel">
+            <input type="submit" name="save" value="Save Data">
+        </form>
+    </body>
+</html>

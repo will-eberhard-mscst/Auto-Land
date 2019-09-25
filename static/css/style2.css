@@ -1,0 +1,12 @@
+header, h1, h2 {
+    text-align: center;
+}
+li {
+    display: inline;
+}
+body{
+    text-align: center;
+}
+label {
+    display: block;
+}

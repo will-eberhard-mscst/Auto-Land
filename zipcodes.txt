@@ -1,0 +1,400 @@
+77016
+Houston, TX
+55406
+Minneapolis, MN
+11756
+Levittown, NY
+22180
+Vienna, VA
+19464
+Pottstown, PA
+98837
+Moses Lake, WA
+37601
+Johnson City, TN
+48823
+East Lansing, MI
+02893
+West Warwick, RI
+30294
+Ellenwood, GA
+21222
+Dundalk, MD
+07026
+Garfield, NJ
+27028
+Mocksville, NC
+28645
+Lenoir, NC
+01757
+Milford, MA
+54650
+Onalaska, WI
+78023
+Helotes, TX
+19406
+King Of Prussia, PA
+91316
+Encino, CA
+48045
+Harrison Township, MI
+11967
+Shirley, NY
+11420
+South Ozone Park, NY
+60107
+Streamwood, IL
+02703
+Attleboro, MA
+60448
+Mokena, IL
+21075
+Elkridge, MD
+44035
+Elyria, OH
+37659
+Jonesborough, TN
+55330
+Elk River, MN
+44720
+North Canton, OH
+48504
+Flint, MI
+75043
+Garland, TX
+33458
+Jupiter, FL
+84067
+Roy, UT
+60559
+Westmont, IL
+10950
+Monroe, NY
+08902
+North Brunswick, NJ
+30705
+Chatsworth, GA
+30809
+Evans, GA
+49423
+Holland, MI
+07030
+Hoboken, NJ
+31313
+Hinesville, GA
+30084
+Tucker, GA
+07601
+Hackensack, NJ
+60061
+Vernon Hills, IL
+06010
+Bristol, CT
+34231
+Sarasota, FL
+08012
+Blackwood, NJ
+12590
+Wappingers Falls, NY
+16601
+Altoona, PA
+01876
+Tewksbury, MA
+42420
+Henderson, KY
+85365
+Yuma, AZ
+48192
+Wyandotte, MI
+49417
+Grand Haven, MI
+48124
+Dearborn, MI
+91784
+Upland, CA
+37363
+Ooltewah, TN
+02150
+Chelsea, MA
+68107
+Omaha, NE
+32780
+Titusville, FL
+36532
+Fairhope, AL
+94043
+Mountain View, CA
+28451
+Leland, NC
+28540
+Jacksonville, NC
+23451
+Virginia Beach, VA
+34711
+Clermont, FL
+11379
+Middle Village, NY
+23666
+Hampton, VA
+30004
+Alpharetta, GA
+11776
+Port Jefferson Station, NY
+40165
+Shepherdsville, KY
+75115
+Desoto, TX
+24112
+Martinsville, VA
+24540
+Danville, VA
+08037
+Hammonton, NJ
+37312
+Cleveland, TN
+30080
+Smyrna, GA
+60139
+Glendale Heights, IL
+32082
+Ponte Vedra Beach, FL
+91010
+Duarte, CA
+55372
+Prior Lake, MN
+08205
+Absecon, NJ
+48103
+Ann Arbor, MI
+11372
+Jackson Heights, NY
+60185
+West Chicago, IL
+18042
+Easton, PA
+32547
+Fort Walton Beach, FL
+92111
+San Diego, CA
+01801
+Woburn, MA
+23834
+Colonial Heights, VA
+11423
+Hollis, NY
+37122
+Mount Juliet, TN
+75088
+Rowlett, TX
+07080
+South Plainfield, NJ
+20164
+Sterling, VA
+21030
+Cockeysville, MD
+60004
+Arlington Heights, IL
+18940
+Newtown, PA
+18015
+Bethlehem, PA
+37388
+Tullahoma, TN
+06902
+Stamford, CT
+55378
+Savage, MN
+02852
+North Kingstown, RI
+58501
+Bismarck, ND
+90278
+Redondo Beach, CA
+44883
+Tiffin, OH
+19026
+Drexel Hill, PA
+60091
+Wilmette, IL
+22405
+Fredericksburg, VA
+22554
+Stafford, VA
+27909
+Elizabeth City, NC
+20748
+Temple Hills, MD
+53051
+Menomonee Falls, WI
+06614
+Stratford, CT
+39120
+Natchez, MS
+12553
+New Windsor, NY
+28803
+Asheville, NC
+11762
+Massapequa Park, NY
+11784
+Selden, NY
+32533
+Cantonment, FL
+21236
+Nottingham, MD
+73072
+Norman, OK
+19446
+Lansdale, PA
+36067
+Prattville, AL
+48195
+Southgate, MI
+17011
+Camp Hill, PA
+21122
+Pasadena, MD
+21784
+Sykesville, MD
+47933
+Crawfordsville, IN
+15642
+Irwin, PA
+30542
+Flowery Branch, GA
+07110
+Nutley, NJ
+22901
+Charlottesville, VA
+24502
+Lynchburg, VA
+11566
+Merrick, NY
+32725
+Deltona, FL
+60099
+Zion, IL
+15650
+Latrobe, PA
+01760
+Natick, MA
+02780
+Taunton, MA
+30274
+Riverdale, GA
+45840
+Findlay, OH
+76039
+Euless, TX
+08332
+Millville, NJ
+23139
+Powhatan, VA
+48867
+Owosso, MI
+60402
+Berwyn, IL
+02360
+Plymouth, MA
+30906
+Augusta, GA
+11793
+Wantagh, NY
+11701
+Amityville, NY
+30117
+Carrollton, GA
+55316
+Champlin, MN
+30012
+Conyers, GA
+29445
+Goose Creek, SC
+76522
+Copperas Cove, TX
+41017
+Ft Mitchell, KY
+30721
+Dalton, GA
+27292
+Lexington, NC
+11743
+Huntington, NY
+60050
+Mchenry, IL
+11422
+Rosedale, NY
+27603
+Raleigh, NC
+23434
+Suffolk, VA
+44312
+Akron, OH
+10512
+Carmel, NY
+07083
+Union, NJ
+11714
+Bethpage, NY
+32904
+Melbourne, FL
+97603
+Klamath Falls, OR
+47130
+Jeffersonville, IN
+60031
+Gurnee, IL
+08094
+Williamstown, NJ
+44805
+Ashland, OH
+32792
+Winter Park, FL
+32958
+Sebastian, FL
+33917
+North Fort Myers, FL
+60073
+Round Lake, IL
+12601
+Poughkeepsie, NY
+44406
+Canfield, OH
+28078
+Huntersville, NC
+33460
+Lake Worth, FL
+60440
+Bolingbrook, IL
+44870
+Sandusky, OH
+38637
+Horn Lake, MS
+46614
+South Bend, IN
+48329
+Waterford, MI
+30680
+Winder, GA
+11691
+Far Rockaway, NY
+18901
+Doylestown, PA
+48021
+Eastpointe, MI
+11418
+Richmond Hill, NY
+20877
+Gaithersburg, MD
+85326
+Buckeye, AZ
+77904
+Victoria, TX
+28079
+Indian Trail, NC
+28086
+Kings Mountain, NC
+95127
+San Jose, CA
+11010
+Franklin Square, NY

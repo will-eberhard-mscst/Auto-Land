@@ -1,0 +1,7 @@
+<%
+    from bottle import get, post, request, response, redirect
+    from passlib.hash import pbkdf2_sha256
+    #logout.html
+    response.set_cookie("customer", "", expires=0)
+    redirect("/login")
+%>

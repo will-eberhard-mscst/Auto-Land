@@ -1,0 +1,114 @@
+<%
+   from bottle import get, post, request, response, redirect
+   from passlib.hash import pbkdf2_sha256
+   from bson.objectid import ObjectId 
+   #error messages
+   message = ""
+   
+    import pymongo
+    connection = pymongo.MongoClient("mongodb://almedin:Test123@cluster0-shard-00-00-vspbc.mongodb.net:27017,cluster0-shard-00-01-vspbc.mongodb.net:27017,cluster0-shard-00-02-vspbc.mongodb.net:27017/test?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin&retryWrites=true")
+    db = connection.dealership #db
+    coll = db.appointments #collection
+   
+    #check if signed in
+   admin = request.get_cookie("admin")
+   user = ""
+   if admin is not None:
+        user = admin
+   else:
+        redirect("/adminlogin")
+   end
+%>
+<!DOCTYPE html>
+<html lang="en">   
+    <head>
+       <title>Auto Land</title>
+        <meta charset="utf-8">
+        <link rel='stylesheet' href='/static/css/al.css'>
+    </head>  
+    <body>
+        <header>
+            <nav id="top">
+                <a href="adminhome">Home</a>
+                <a href="inventory">View Inventory</a>
+                <a href="addvehicle">Add A Car</a>
+                <a href="customers">View All Customers</a>
+                <a href="appointments">View Appointments</a>
+                <a href="adminlogout">Logout</a>
+            </nav>
+        </header>
+        <h1>Auto Land</h1>
+        <h2>Manage Customers</h2>
+        <form method="post" class="search">
+            <input type="text" name="search" placeholder="Search...">
+            <input type="submit" name="enter" value="Search">
+        </form>
+        <table>
+            <caption>Appointments</caption>
+            <tr>
+                <th>ID</th>
+                <th>Type</th>
+                <th>Data and Time</th>
+                <th>Customer ID:</th>
+                <th>Make</th>
+                <th>Model</th>
+                <th>Year</th>
+                <th>Mileage</th>
+            </tr>
+            <%
+            #get inventory
+            coll = db.appointments
+           #check if searched
+           searched = request.forms.get("search")
+           if searched is not None:
+                string = ".*" + searched + ".*"
+                results = coll.find({"$or": [{"_id" : {"$regex": string , "$options": "i"} }, {"type": {"$regex": string, "$options": "i"} }, {"dateTime" : {"$regex": string , "$options": "i"} }, {"customerID" : {"$regex": string , "$options": "i"} } ] })
+           else:
+                results = coll.find()
+           end
+           
+           if results.count() > 0:
+                for entry in results:
+         %>
+            <tr>
+                <td>{{entry["_id"]}}</td>
+                <td>{{entry["type"]}}</td>
+                <td>{{entry["dateTime"]}}</td>
+                <td>{{entry["customerID"]}}</td>
+                
+                <%
+                   make = ""
+                   model = ""
+                   year = ""
+                   mileage = ""
+                   if entry["type"] == "sell":
+                        make = entry["vehicle"]["make"]
+                       model = entry["vehicle"]["model"]
+                       year = entry["vehicle"]["year"]
+                       mileage = entry["vehicle"]["mileage"]
+                   else:
+                        carID = entry["vehicleID"]
+                        coll = db.inventory
+                        carresults = coll.find({"_id": ObjectId(carID)})
+                        for car in carresults:
+                            make = car["make"]
+                            model = car["model"]
+                            year = car["year"]
+                            mileage = car["mileage"]
+                        end
+                   end
+                   
+                %>
+                
+                <td>{{make}}</td>
+                <td>{{model}}</td>
+                <td>{{year}}</td>
+                <td>{{mileage}}</td>
+                <td><a class="deletebtn" href="/appointments/delete/{{entry['_id']}}"role="button">Delete</a></td>
+                
+            </tr>
+            %end
+        %end
+        </table>
+    </body>
+</html>

@@ -1,0 +1,108 @@
+<%
+   from bottle import get, post, request, response, redirect
+   from passlib.hash import pbkdf2_sha256
+   import datetime
+   #error messages
+   message = ""
+   status = ""
+   
+   #db connect
+    import pymongo
+    connection = pymongo.MongoClient("mongodb://almedin:Test123@cluster0-shard-00-00-vspbc.mongodb.net:27017,cluster0-shard-00-01-vspbc.mongodb.net:27017,cluster0-shard-00-02-vspbc.mongodb.net:27017/test?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin&retryWrites=true")
+    db = connection.dealership #db
+    coll = db.appointments #collection
+   
+   #check if signed in
+   customer = request.get_cookie("customer")
+   user = ""
+   if customer is not None:
+        user = customer
+   else:
+        redirect("/login")
+   end
+   
+   #check if date is valid
+   book = request.forms.get("book")
+   if book is not None:
+         try:
+            date = request.forms.get("date")
+            dateList = date.split("/")
+            month = int(dateList[0])
+            day = int(dateList[1])
+            dateyear = int(dateList[2])
+            time = request.forms.get("time")
+            timeList = time.split(":")
+            hour = int(timeList[0])
+            minute = int(timeList[1])
+
+            make = request.forms.get("make")
+            model = request.forms.get("model")
+            year = request.forms.get("year")
+            mileage = request.forms.get("mileage")
+       
+            appdate = datetime.datetime(dateyear, month, day, hour, minute )
+            new_item = {"type": "sell",
+                "dateTime": appdate,
+                "customerID": user,
+                "vehicle": {"make": make,
+                    "model": model,
+                    "year": year,
+                    "mileage": mileage
+                    }
+                }
+            coll.insert_one(new_item)
+            message = "Your appointment has been booked!"
+            status = "success"
+        except Exception as e:
+            message = "Failed to book an appointment. Please enter the date or time in the right format"
+            status = "alert"
+        end
+   end
+%>
+    
+<!doctype html>
+<html lang="en">
+ <head>
+        <title>Auto</title>
+        <meta charset="utf-8">
+        <link rel='stylesheet' href='/static/css/al.css'>
+         <!-- Jquery -->
+        <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+        <link rel="stylesheet" href="/resources/demos/style.css">
+        <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    </head>
+    <body>
+        <nav id="top">
+            <a href="home">Home</a>
+            <a href="userpage">My Account</a>
+            <a href="logout">Logout</a>
+        </nav>
+        <h1>Auto Land</h1>
+        <h2>Book an Appointment for Appraisal</h2>
+        <a href="home" role="button">Go Back</a>
+        <div class="{{status}}">{{message}}</div>
+        <form method="post">
+            <div class="card">
+                <div>Appointment Time and Date:</div>
+                <label>Date:</label>
+                <input type="text" name="date" id="datepicker" required>
+                <label>Time:</label>
+                <input type="time" name="time" required>
+            </div>
+            <div class="card">
+                <div>Vehicle Info:</div>
+                <label>Make:</label>
+                <input type="text" name="make" required>
+                <label>Model:</label>
+                <input type="text" name="model" required>
+                <label>Year:</label>
+                <input type="text" name="year" required>
+                <label>Mileage:</label>
+                <input type="text" name="mileage" required>
+            </div>
+            <input type="submit" name="book" value="Book">
+        </form>
+        <script type="text/javascript" src="/static/js/date.js"></script>
+    </body>
+</html>

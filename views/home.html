@@ -1,0 +1,86 @@
+<%
+   from bottle import get, post, request, response, redirect
+   from passlib.hash import pbkdf2_sha256
+   #error messages
+   message = ""
+   
+   #db connect
+    import pymongo
+    connection = pymongo.MongoClient("mongodb://almedin:Test123@cluster0-shard-00-00-vspbc.mongodb.net:27017,cluster0-shard-00-01-vspbc.mongodb.net:27017,cluster0-shard-00-02-vspbc.mongodb.net:27017/test?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin&retryWrites=true")
+    db = connection.dealership #db
+    coll = db.customers #collection
+   
+   #check if signed in
+   customer = request.get_cookie("customer")
+   user = ""
+   if customer is not None:
+        user = customer
+   else:
+        redirect("/login")
+   end
+   
+%>
+    
+<!doctype html>
+<html lang="en">
+ <head>
+        <title>Auto Land</title>
+        <meta charset="utf-8">
+         <link rel='stylesheet' href='/static/css/al.css'>
+    </head>
+    <body>
+        <nav id="top">
+            <a href="home">Home</a>
+            <a href="userpage">My Account</a>
+            <a href="logout">Logout</a>
+        </nav>
+        <h1>Auto Land</h1>
+        <h2>View Vehicles</h2>
+        <a href="sell">Sell Your Vehicle</a>
+        <div>{{message}}</div>
+        <form method="post" class="search">
+            <input type="text" name="search" placeholder="Search...">
+            <input type="submit" name="enter" value="Search">
+        </form>
+        <div class="flex-container">
+        <%
+            #get inventory
+            coll = db.inventory
+           #check if searched
+           searched = request.forms.get("search")
+           if searched is not None:
+                string = ".*" + searched + ".*"
+                results = coll.find({"$or": [{"make" : {"$regex": string , "$options": "i"} }, {"model": {"$regex": string, "$options": "i"} }, {"year" : {"$regex": string , "$options": "i"} }, {"price" : {"$regex": string , "$options": "i"} }, {"mileage" : {"$regex": string , "$options": "i"} }, {"color" : {"$regex": string , "$options": "i"} }, {"mpg" : {"$regex": string , "$options": "i"} } ] })
+           else:
+                results = coll.find()
+           end
+           
+           if results.count() > 0:
+                for entry in results:
+                    id = entry["_id"]
+         %>
+                    <div class="card">
+                      <!--<img src="images/{{id}}/1.jpg" alt="No Image Available">-->
+                      <img id="car" src="/static/images/{{id}}/1.jpg" alt="No Image Available">
+                      <div class="container">
+                        <h4>{{entry["make"]}} {{entry["model"]}} {{entry["year"]}}</h4> 
+                        <div><strong>Price:</strong> ${{entry["price"]}}</div>
+                        <div><strong>Mileage:</strong> {{entry["mileage"]}}</div>
+                        <div><strong>Color:</strong> {{entry["color"]}}</div>  
+                        <div><strong>MPG:</strong> {{entry["mpg"]}}</div>
+                        <!-- <form method="post" action="details">
+                            <input type="hidden" name="detailsID" value="{{id}}">
+                            <input type="submit" name="details" value="View Details">
+                        </form> -->
+                        <form method="post" action="buy">
+                            <input type="hidden" name="buyID" value="{{id}}">
+                            <input type="submit" name="buy" value="Make an Appointment">
+                        </form>
+                      </div>
+                    </div>
+              %end
+          %end
+        </div>
+        
+    </body>
+</html>

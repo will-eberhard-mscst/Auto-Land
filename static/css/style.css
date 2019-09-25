@@ -1,0 +1,29 @@
+header, {
+    text-align: center;
+}
+li {
+    list-style: none;
+    display: inline;
+}
+
+table {
+    width: 1000px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+th {
+    text-align: left;
+}
+
+table, th, td {
+    border: 1px solid #000;
+    border-collapse: collapse;
+}
+tr:nth-child(even){
+    background-color: antiquewhite;
+}
+caption {
+    font-size: 40px;
+    text-align: center;
+}

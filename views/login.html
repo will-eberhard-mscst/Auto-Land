@@ -1,0 +1,75 @@
+<%
+   from bottle import get, post, request, response, redirect
+   from passlib.hash import pbkdf2_sha256
+   #error messages
+   message = ""
+   status = ""
+   
+   #db connect
+    import pymongo
+    connection = pymongo.MongoClient("mongodb://almedin:Test123@cluster0-shard-00-00-vspbc.mongodb.net:27017,cluster0-shard-00-01-vspbc.mongodb.net:27017,cluster0-shard-00-02-vspbc.mongodb.net:27017/test?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin&retryWrites=true")
+    db = connection.dealership #db
+    coll = db.customers #collection
+   
+   #check if signed in
+   customer = request.get_cookie("customer")
+   if customer is not None:
+        redirect("/home")
+   end
+    
+   #check login
+   login = request.forms.get("login")
+   enteredUsername = request.forms.get("username")
+   enteredPassword = request.forms.get("password")
+   if login is not None:
+       if enteredUsername is not None and enteredPassword is  not None:
+          results = coll.find({"_id": enteredUsername})
+            if results.count() > 0:
+                for entry in results:
+                    username = entry["_id"]
+                    password = entry["password"]
+                end
+                #verify password
+                if(pbkdf2_sha256.verify(enteredPassword, password)):
+                    message = "Password is correct!"
+                    response.set_cookie("customer", username)
+                    redirect("/home")
+                else:
+                    message = "Password is incorrect"
+                    status = "alert"
+                end
+            else:
+                message = "Username was not found"
+                status = "alert"
+            end
+        end   
+    end
+    
+%>
+    
+
+    
+<!doctype html>
+<html lang="en">
+ <head>
+        <title>Auto</title>
+        <meta charset="utf-8">
+        <link rel='stylesheet' href='/static/css/al.css'>
+    </head>
+    <body>   
+        <h1>Auto Land</h1>
+        <h2>Customer Login</h2>
+        <div class="{{status}}">{{message}}</div>
+        <form method="post" class="card">
+            <label>Username:</label>
+            <input type="text" name="username" required>
+            <label>Password:</label>
+            <input type="password" name="password" required>
+            <input type="submit" name="login" value="Sign In">
+        </form>
+        <div>
+            <a href="create_account" role="button">Create an Account</a>
+            <a href="adminlogin" role="button">Admin Login</a>
+        </div>
+    </body>
+</html>
